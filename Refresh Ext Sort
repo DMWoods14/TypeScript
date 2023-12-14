@@ -1,0 +1,42 @@
+function main(workbook: ExcelScript.Workbook) {
+    let aNO_SCHED = workbook.getTable("ANO_SCHED");
+    let sC_DATA = workbook.getWorksheet("SC DATA");
+    let selectedSheet = workbook.getActiveWorksheet();
+    let targetColorHex1 = "#92CEE6";
+    let targetColorHex2 = "#30A2D0";
+    let targetColorHex3 = "#1D6481";
+    aNO_SCHED.getColumn("Booked Truck").getRangeBetweenHeaderAndTotal().getRow(0).copyFrom(sC_DATA.getRange("Z32"), ExcelScript.RangeCopyType.formats, false, false);
+    aNO_SCHED.getColumn("Booked Truck").getRangeBetweenHeaderAndTotal().getRow(0).getResizedRange(750, 0).copyFrom(selectedSheet.getRange("S5"), ExcelScript.RangeCopyType.formats, false, false);
+        aNO_SCHED.getSort().apply([{
+            key: 5,
+            ascending: true,
+        }, {
+            key: 16,
+            ascending: true,
+            sortOn: ExcelScript.SortOn.cellColor,
+            color: targetColorHex1
+        }, {
+            key: 17,
+            ascending: true
+        },{
+            key: 16,
+            ascending: true,
+        }, {
+            key: 16,
+            ascending: true,
+            sortOn: ExcelScript.SortOn.cellColor,
+            color: targetColorHex2
+        }, {
+            key: 16,
+            ascending: true,
+            sortOn: ExcelScript.SortOn.cellColor,
+            color: targetColorHex3
+        }, {
+            key: 8,
+            ascending: true
+        }], false);
+    selectedSheet.getRange("S5:S750").clear(ExcelScript.ClearApplyTo.formats);
+    aNO_SCHED.getColumn("Booked Truck").getRangeBetweenHeaderAndTotal().getRow(0).copyFrom(sC_DATA.getRange("AA32"), ExcelScript.RangeCopyType.formats, false, false);
+    aNO_SCHED.getColumn("Booked Truck").getRangeBetweenHeaderAndTotal().getRow(0).getResizedRange(745, 0).copyFrom(selectedSheet.getRange("S5"), ExcelScript.RangeCopyType.formats, false, false);
+
+}
