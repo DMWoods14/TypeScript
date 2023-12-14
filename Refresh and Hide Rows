@@ -1,0 +1,16 @@
+function main(workbook: ExcelScript.Workbook) {
+    let selectedSheet = workbook.getActiveWorksheet();
+    let pfsPrintSheet = workbook.getWorksheet("PFS PRINT");
+      selectedSheet.getRange("M5").setFormulaLocal("=IF(E5>0, XLOOKUP(E5, QUERY_PFS_DISPATCH[WO], QUERY_PFS_DISPATCH[Qty Rem], 999999), 999999)");
+    selectedSheet.getRange("M5:M4000").copyFrom(selectedSheet.getRange("M5"), ExcelScript.RangeCopyType.formulas, false, false);
+    selectedSheet.getRange("M5").copyFrom(selectedSheet.getRange("M5:M4000"), ExcelScript.RangeCopyType.values, false, false);
+    let firstBlankRow = 5;
+    while (firstBlankRow <= 4000 && pfsPrintSheet.getRange("E" + firstBlankRow).getValue() !== "") {
+        firstBlankRow++;
+    }
+    if (firstBlankRow <= 4000) {
+      pfsPrintSheet.getRange("D" + firstBlankRow + ":D4000").setFormula("=IF($E" + firstBlankRow + ">0, XLOOKUP($E" + firstBlankRow + ", QUERY_PFS_DISPATCH[WO], QUERY_PFS_DISPATCH[SO], \"\"), \" \")");
+      pfsPrintSheet.getRange("F" + firstBlankRow + ":F4000").setFormula("=FILTER(IF($E" + firstBlankRow + ">0, FILTER(INDEX(SC_DATA!$A$4:$R$4000, SEQUENCE(ROWS(SC_DATA!$A$4:$R$4000)), {3,4,5,6,7,8,9,10,11,18,13,14,15, 12}), SC_DATA!$B$4:$B$4000=$E" + firstBlankRow + ", \"\"), \"\"), 1)");
+        selectedSheet.getRange("M:M").replaceAll("999999", "", { completeMatch: false, matchCase: false });
+    }
+}
