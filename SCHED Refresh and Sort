@@ -1,0 +1,44 @@
+function main(workbook: ExcelScript.Workbook) {
+    let aL_SCHED = workbook.getTable("AL_SCHED");
+    let currentWorksheet = workbook.getActiveWorksheet();
+        currentWorksheet.getRange("A2:A300").clear(ExcelScript.ClearApplyTo.contents)
+        aL_SCHED.getSort().apply([{
+            key: 19,
+            ascending: true,
+        },{
+            key: 8,
+            ascending: true,
+        }], false);
+        aL_SCHED.getSort().apply([{
+            key: 20,
+            ascending: true,
+        }   
+// ,{
+//  key: 5,
+//  ascending: false,
+// }
+        ], false);
+    let dataRange = currentWorksheet.getRange("B5:B" + Math.min(304, currentWorksheet.getUsedRange().getRowCount()));
+    let columnBValues = dataRange.getValues();
+    let indexDictionary: { [key: string]: number } = {};
+    let indices: (number | null)[] = [];
+    for (let i = 0; i < columnBValues.length; i++) {
+        let value = columnBValues[i][0];
+        if (value !== null && value !== undefined && value !== "") {
+            if (indexDictionary[value] === undefined) {
+                indexDictionary[value] = Object.keys(indexDictionary).length + 1;
+            }
+            indices.push(indexDictionary[value]);
+        } else {
+            indices.push(null);
+        }
+    }
+    let outputRange = currentWorksheet.getRange("A5:A" + (indices.length + 4));
+    let outputValues: (number | null)[][] = indices.map(index => [index]);
+        outputRange.setValues(outputValues);
+        aL_SCHED.getSort().apply([{
+            key: 0,
+            ascending: true,
+        }], false);
+    currentWorksheet.getRange("A2:A300").clear(ExcelScript.ClearApplyTo.contents)
+}
