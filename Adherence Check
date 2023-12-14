@@ -1,0 +1,27 @@
+function main(workbook: ExcelScript.Workbook) {
+    const sheetName = "Sched Reliability";
+    const sheet = workbook.getWorksheet(sheetName);
+    const usedRange = sheet.getUsedRange();
+    let relPrepSheet = workbook.getWorksheet("REL PREP");
+    let histDataArchiveSheet = workbook.getWorksheet("SCHED HIST");
+    let cellG2Value = relPrepSheet.getRange("G2").getText();
+    let columnA = histDataArchiveSheet.getRange("A9:A314");
+    let matchingRow = -1;
+    for (let rowNum = 1; rowNum <= columnA.getRowCount(); rowNum++) {
+        let cellAValue = columnA.getCell(rowNum, 0).getText();
+        if (cellAValue === cellG2Value) {
+            matchingRow = rowNum;
+            break;
+        }
+    }
+    if (matchingRow !== -1) {
+        let c2Value = relPrepSheet.getRange("C2").getValue();
+        let d2Value = relPrepSheet.getRange("D2").getValue();
+        let e2Value = relPrepSheet.getRange("E2").getValue();
+        histDataArchiveSheet.getRange(`C${matchingRow + 9}`).setValue(c2Value);
+        histDataArchiveSheet.getRange(`D${matchingRow + 9}`).setValue(d2Value);
+        histDataArchiveSheet.getRange(`E${matchingRow + 9}`).setValue(e2Value);
+    }
+    let pNTSched = workbook.getWorksheet("AL SCHEDULE")
+    pNTSched.getRange("D350:D5000").clear(ExcelScript.ClearApplyTo.contents);
+}
