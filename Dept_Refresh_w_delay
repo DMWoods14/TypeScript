@@ -1,0 +1,45 @@
+function main(workbook: ExcelScript.Workbook) {
+    let pNT_Dispatch = workbook.getWorksheet("PNT DISPATCH")
+    let tABLE_MAIN_PAINT_DISPATCH = workbook.getTable("TABLE_MAIN_PAINT_DISPATCH");
+    let sC_DATA = workbook.getWorksheet("SC DATA")
+    let selectedSheet = workbook.getActiveWorksheet();
+
+        sC_DATA.getRange("CV4").copyFrom(selectedSheet.getRange("C5:C3000"), ExcelScript.RangeCopyType.values, false, false);
+        sC_DATA.getRange("CW4").copyFrom(selectedSheet.getRange("I5:I3000"), ExcelScript.RangeCopyType.values, false, false);
+        sC_DATA.getRange("CX4").copyFrom(selectedSheet.getRange("T5:T3000"), ExcelScript.RangeCopyType.values, false, false);
+        sC_DATA.getRange("CY4").copyFrom(selectedSheet.getRange("U5:U3000"), ExcelScript.RangeCopyType.values, false, false);
+
+workbook.refreshAllDataConnections();
+
+  function sleep(seconds: number) {
+    const millisecondDelay = seconds * 1000
+    const start = Date.now()
+    let now = Date.now();
+    while ((now - start) < millisecondDelay) {
+      now = Date.now();
+      for (let i = 0; i < 1000; i++) { }
+    }
+  }
+  async function main(workbook: ExcelScript.Workbook) {
+    let sheet = workbook.getActiveWorksheet();
+    for (let i = 0; i < 60; i++) {
+      // await sheet.calculate(true);
+      sleep(15);
+    }
+  }
+ selectedSheet.getRange("I5").getExtendedRange(ExcelScript.KeyboardDirection.down).clear(ExcelScript.ClearApplyTo.contents);
+        selectedSheet.getRange("I5:I3000").setFormulaLocal("=IFERROR(XLOOKUP(C5, 'SC DATA'!$CV$4:$CV$3000, 'SC DATA'!$CW$4:$CW$3000, \"\"), \"\")");
+        selectedSheet.getRange("T5").getExtendedRange(ExcelScript.KeyboardDirection.down).clear(ExcelScript.ClearApplyTo.contents);
+        selectedSheet.getRange("T5:T3000").setFormulaLocal("=IFERROR(XLOOKUP(C5, 'SC DATA'!$CV$4:$CV$3000, 'SC DATA'!$CX$4:$CX$3000, \"\"), \"\")");
+        selectedSheet.getRange("U5").getExtendedRange(ExcelScript.KeyboardDirection.down).clear(ExcelScript.ClearApplyTo.contents);
+        selectedSheet.getRange("U5:U3000").setFormulaLocal("=IFERROR(XLOOKUP(C5, 'SC DATA'!$CV$4:$CV$3000, 'SC DATA'!$CY$4:$CY$3000, \"\"), \"\")");
+
+  tABLE_MAIN_PAINT_DISPATCH.getColumn("On List").getRangeBetweenHeaderAndTotal().getRow(0).copyFrom(selectedSheet.getRange("I5:I3000"), ExcelScript.RangeCopyType.values, false, false);
+  tABLE_MAIN_PAINT_DISPATCH.getColumn("Sched Comments").getRangeBetweenHeaderAndTotal().getRow(0).copyFrom(selectedSheet.getRange("T5:T3000"), ExcelScript.RangeCopyType.values, false, false);
+  tABLE_MAIN_PAINT_DISPATCH.getColumn("OVEN Comments").getRangeBetweenHeaderAndTotal().getRow(0).copyFrom(selectedSheet.getRange("U5:U3000"), ExcelScript.RangeCopyType.values, false, false);
+        selectedSheet.getRange("I5:I3000").replaceAll("1/0/1900", " ", { completeMatch: false, matchCase: false });
+        selectedSheet.getRange("T5:T3000").replaceAll("0", " ", { completeMatch: false, matchCase: false });
+        selectedSheet.getRange("U5:U3000").replaceAll("0", " ", { completeMatch: false, matchCase: false });
+}
+
+ 
