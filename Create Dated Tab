@@ -1,0 +1,12 @@
+function main(workbook: ExcelScript.Workbook) {
+    let date = new Date();
+    let formattedDate = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric' }).format(date);
+    let sourceSheet = workbook.getWorksheet("TEMPLATE");
+    let destinationSheet = sourceSheet.copy();
+      destinationSheet.setName(formattedDate);
+    let sourceRange = sourceSheet.getRange("A1:L23");
+    let data = sourceRange.getValues();
+    let destinationRange = destinationSheet.getRange("A1:L23");
+      destinationRange.setValues(data);
+
+}
